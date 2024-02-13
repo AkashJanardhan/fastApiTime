@@ -3,13 +3,24 @@ version: 2.1
 orbs:
   python: circleci/python@1.2.0
 
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - run:
+          name: Run Tests
+          command: |
+            pytest
+
 workflows:
   version: 2
-  build-and-test:
+  test_my_app:
     jobs:
-      - python/test:
-          version: "3.8"
-          steps:
-            - checkout
-            - run: pip install -r requirements.txt
-            - run: pytest
+      - build-and-test
